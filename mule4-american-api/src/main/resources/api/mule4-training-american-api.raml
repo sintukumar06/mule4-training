@@ -1,0 +1,65 @@
+#%RAML 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/f98fe14d-3413-4900-aacb-a14a26623afa # 
+title: mule4-training-american-api
+version: v1
+
+types: 
+  AmericanFlight: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flight-data-type/1.0.1/AmericanFlightDataType.raml
+
+/flights:
+  get:
+    queryParameters: 
+      destination:
+        type: string
+        enum: 
+          - SFO
+          - CLE
+    responses: 
+      200:
+        body: 
+          application/json:
+            type: AmericanFlight[]
+            example: !include exchange_modules/68ef9520-24e9-4cf2-b2f5-620025690913/training-american-flights-example/1.0.1/AmericanFlightsExample.raml
+
+  post:
+    body: 
+      application/json:
+        type: AmericanFlight
+        example: !include examples/american-flight-example.raml
+
+    responses: 
+      201:
+        body: 
+          application/json:
+            type: AmericanFlight
+            example: !include examples/american-flight-example.raml
+
+  /{id}:
+    get:
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: AmericanFlight
+              example: !include examples/american-flight-example.raml
+                 
+    put:
+      body: 
+        application/json:
+          type: AmericanFlight
+          example: !include examples/american-flight-example.raml
+
+      responses: 
+        200:
+          body: 
+            application/json:
+              type: AmericanFlight
+              example: !include examples/american-flight-example.raml
+  
+    delete:
+      responses: 
+        204:
+          body: 
+            application/json:
+              example:
+                message: "record deleted"
