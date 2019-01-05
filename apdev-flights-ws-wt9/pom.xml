@@ -79,6 +79,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.13</version>
         </dependency>
+    	<dependency>
+            <groupId>68ef9520-24e9-4cf2-b2f5-620025690913</groupId>
+            <artifactId>mule-plugin-training-american-flights-api</artifactId>
+            <version>1.0.2</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
     </dependencies>
 
 	<repositories>

@@ -10,6 +10,7 @@ http://www.mulesoft.org/schema/mule/american-flights-api http://www.mulesoft.org
 http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<american-flights-api:config name="American_Flights_API_Config1" doc:name="American Flights API Config" doc:id="f5840ea6-f086-414f-87d9-218a3178108b" />
 	<flow name="getAllAirlineFlights" doc:id="99f895ee-f3d6-47a7-aaf1-d160ad7b7341">
 		<scatter-gather doc:name="Scatter-Gather" doc:id="927401f3-af50-4d06-85c6-d61ef6784887" >
 			<route >
@@ -63,30 +64,8 @@ payload]]></ee:set-payload>
 	</flow>
 	<flow name="getAmericanFlights" doc:id="bcfaff72-6c29-46ab-bb29-5d6467f690c3" >
 		<flow-ref doc:name="setCode" doc:id="e92dc748-15b4-4e33-bcb6-a9e26a5a4841" name="setCode"/>
-		<db:select doc:name="Select" doc:id="919c1569-0fd1-486c-88fa-7facafdaf982" config-ref="Database_Config">
-			<db:sql>SELECT *
-FROM american</db:sql>
-		</db:select>
-		<ee:transform doc:name="Transform Message" doc:id="13470980-9d3c-4d95-b6f1-fe044a258ba4">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-payload map ( payload01 , indexOfPayload01 ) -> {
-	ID: payload01.ID,
-	code: (payload01.code1 default "") ++ (payload01.code2 default ""),
-	price: payload01.price default 0,
-	departureDate: payload01.takeOffDate as String default "",
-	origin: payload01.fromAirport default "",
-	destination: payload01.toAirport default "",
-	emptySeats: payload01.seatsAvailable default 0,
-	plane: {
-		"type": payload01.planeType default "",
-		totalSeats: payload01.totalSeats default 0
-	}
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="0bf00fca-152e-42ab-8728-fb8cb059ff1e" message="In american flow before external call"/>
+		<american-flights-api:get-all-flights doc:name="Get all flights" doc:id="9166170a-25a2-418e-a4e2-64b9ffbfa35d" config-ref="American_Flights_API_Config1" destination="#[vars.code]"/>
 		<ee:transform doc:name="JSON to [Flight]" doc:id="837828bb-48f5-4c74-a1cb-83c3ab3d7be6">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
